@@ -4,6 +4,10 @@ pub fn validate(valor: &str) -> bool {
     }
     let numbers: Vec<&str> = valor.split("").collect();
 
+    if equal_digits(&numbers) {
+        return false;
+    }
+
     let digit_one = validate_first_digit(&numbers);
     if digit_one != numbers[10].parse::<i16>().unwrap() {
         return false;
@@ -53,4 +57,20 @@ fn validate_second_digit(numbers: &Vec<&str>) -> i16 {
     } else {
         return result;
     }
+}
+
+fn equal_digits(numbers: &Vec<&str>) -> bool {
+    let mut digit = "";
+
+    for number in numbers {
+        if number.to_owned() != "" {
+            if digit == "" {
+                digit = number;
+            } else if digit != number.to_owned() {
+                return false;
+            }
+        }
+    }
+
+    return true;
 }

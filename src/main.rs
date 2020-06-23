@@ -2,5 +2,5 @@
 mod cpf;
 
 fn main() {
-    println!("{}", cpf::validate("87997106090"));
+    println!("{}", cpf::validate("11111111111"));
 }
