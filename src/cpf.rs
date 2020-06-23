@@ -1,32 +1,32 @@
 pub fn validate(valor: &str) -> bool {
-    if valor.chars().count() != 11 {
-        return false;
-    }
-    let numbers: Vec<&str> = valor.split("").collect();
+    let numbers = valor
+        .chars()
+        .filter(|s| !"./-".contains(s.to_owned()))
+        .collect::<Vec<_>>();
 
-    if equal_digits(&numbers) {
+    if numbers.len() != 11 || equal_digits(&numbers) {
         return false;
     }
 
     let digit_one = validate_first_digit(&numbers);
-    if digit_one != numbers[10].parse::<i16>().unwrap() {
+    if digit_one != numbers[9].to_string().parse::<i16>().unwrap() {
         return false;
     }
 
     let digit_second = validate_second_digit(&numbers);
-    if digit_second != numbers[11].parse::<i16>().unwrap() {
+    if digit_second != numbers[10].to_string().parse::<i16>().unwrap() {
         return false;
     }
 
     return true;
 }
 
-fn validate_first_digit(numbers: &Vec<&str>) -> i16 {
+fn validate_first_digit(numbers: &Vec<char>) -> i16 {
     let mut count = 10;
     let mut _sum = 0;
     for number in numbers {
-        if number.to_owned() != "" && count >= 2 {
-            let number_int = number.parse::<i16>().unwrap();
+        if count >= 2 {
+            let number_int = number.to_string().parse::<i16>().unwrap();
             _sum += number_int * count;
             count -= 1;
         }
@@ -40,12 +40,12 @@ fn validate_first_digit(numbers: &Vec<&str>) -> i16 {
     }
 }
 
-fn validate_second_digit(numbers: &Vec<&str>) -> i16 {
+fn validate_second_digit(numbers: &Vec<char>) -> i16 {
     let mut count = 11;
     let mut _sum = 0;
     for number in numbers {
-        if number.to_owned() != "" && count >= 2 {
-            let number_int = number.parse::<i16>().unwrap();
+        if count >= 2 {
+            let number_int = number.to_string().parse::<i16>().unwrap();
             _sum += number_int * count;
             count -= 1;
         }
@@ -59,16 +59,14 @@ fn validate_second_digit(numbers: &Vec<&str>) -> i16 {
     }
 }
 
-fn equal_digits(numbers: &Vec<&str>) -> bool {
-    let mut digit = "";
+fn equal_digits(numbers: &Vec<char>) -> bool {
+    let mut digit = String::from("");
 
     for number in numbers {
-        if number.to_owned() != "" {
-            if digit == "" {
-                digit = number;
-            } else if digit != number.to_owned() {
-                return false;
-            }
+        if digit == "" {
+            digit = number.to_string();
+        } else if digit != number.to_string() {
+            return false;
         }
     }
 
