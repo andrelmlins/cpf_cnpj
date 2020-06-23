@@ -29,19 +29,19 @@ extern crate cpf_cnpj;
 use cpf_cnpj::cpf;
 use cpf_cnpj::cnpj;
 
-cpf.validate("255.248.930-33");
+cpf::validate("255.248.930-33");
 // true
 
-cpf.validate("25524893033");
+cpf::validate("25524893033");
 // true
 
-cpf.validate("99999999999");
+cpf::validate("99999999999");
 // false
 
-cnpj.validate("36.002.518/0001-01");
+cnpj::validate("36.002.518/0001-01");
 // true
 
-cnpj.validate("36002518000101");
+cnpj::validate("36002518000101");
 // true
 ```
 
