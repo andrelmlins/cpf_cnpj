@@ -19,6 +19,10 @@ Adicione essa dependência no seu `Cargo.toml`:
 cpf_cnpj = "0.1.0"
 ```
 
+## Uso básico
+
+Abaixo uma forma simples de como utilizar essa biblioteca:
+
 ```rust
 extern crate cpf_cnpj;
 
