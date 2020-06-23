@@ -3,7 +3,13 @@ name = "cpf_cnpj"
 version = "0.1.0"
 authors = ["André Lins <andrelucas01@hotmail.com>"]
 edition = "2018"
+license = "MIT"
+readme = "README.md"
+description = "Validador de CPF e CNPJ para Rust."
+keywords = ["cpf", "cnpj", "validador", "validate"]
+repository = "https://github.com/andrelmlins/cpf_cnpj"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[badges]
+travis-ci = { repository = "andrelmlins/cpf_cnpj" }
 
 [dependencies]
