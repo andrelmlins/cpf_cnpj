@@ -1,0 +1,13 @@
+language: rust
+rust:
+  - stable
+
+matrix:
+  allow_failures:
+    - rust: stable
+
+deploy:
+  provider: cargo
+  token: "$AUTH_TOKEN"
+  on:
+    tags: true
