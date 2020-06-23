@@ -6,6 +6,7 @@ edition = "2018"
 license = "MIT"
 readme = "README.md"
 description = "Validador de CPF e CNPJ para Rust."
+documentation = "https://docs.rs/cpf_cnpj"
 keywords = ["cpf", "cnpj", "validador", "validate"]
 repository = "https://github.com/andrelmlins/cpf_cnpj"
 

@@ -2,7 +2,7 @@
 
 Validador de CPF e CNPJ para Rust.
 
-[![Crates.io](https://img.shields.io/crates/v/cpf_cnpj)](https://crates.io/crates/cpf_cnpj) &bull; [![Crates.io](https://img.shields.io/crates/l/cpf_cnpj)](https://github.com/andrelmlins/cpf_cnpj/blob/master/LICENSE) &bull; [![Build Status](https://travis-ci.com/andrelmlins/cpf_cnpj.svg?branch=master)](https://travis-ci.com/andrelmlins/cpf_cnpj)
+[![Crates.io](https://img.shields.io/crates/v/cpf_cnpj)](https://crates.io/crates/cpf_cnpj) &bull; [![Crates.io](https://img.shields.io/crates/l/cpf_cnpj)](https://github.com/andrelmlins/cpf_cnpj/blob/master/LICENSE) &bull; [![Build Status](https://travis-ci.com/andrelmlins/cpf_cnpj.svg?branch=master)](https://travis-ci.com/andrelmlins/cpf_cnpj) &bull; [![API](https://docs.rs/cpf_cnpj/badge.svg)](https://docs.rs/cpf_cnpj)
 
 Alguns características importantes devem ser destacadas nessa biblioteca:
 
