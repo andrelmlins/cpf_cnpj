@@ -1,6 +1,6 @@
 # cpf_cnpj
 
-Validador de CPF e CNPJ para Rust.
+Validador e Gerador de CPF e CNPJ para Rust.
 
 [![Crates.io](https://img.shields.io/crates/v/cpf_cnpj)](https://crates.io/crates/cpf_cnpj) &bull; [![Crates.io](https://img.shields.io/crates/l/cpf_cnpj)](https://github.com/andrelmlins/cpf_cnpj/blob/master/LICENSE) &bull; [![Build Status](https://travis-ci.com/andrelmlins/cpf_cnpj.svg?branch=master)](https://travis-ci.com/andrelmlins/cpf_cnpj) &bull; [![API](https://docs.rs/cpf_cnpj/badge.svg)](https://docs.rs/cpf_cnpj)
 
@@ -43,6 +43,12 @@ cnpj::validate("36.002.518/0001-01");
 
 cnpj::validate("36002518000101");
 // true
+
+cpf::generate();
+// 25524893033
+
+cnpj::generate();
+// 76071265000142
 ```
 
 ## Licença
