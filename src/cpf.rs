@@ -1,3 +1,5 @@
+use rand::Rng;
+
 pub fn validate(valor: &str) -> bool {
     let numbers = valor
         .chars()
@@ -9,24 +11,41 @@ pub fn validate(valor: &str) -> bool {
     }
 
     let digit_one = validate_first_digit(&numbers);
-    if digit_one != numbers[9].to_string().parse::<i16>().unwrap() {
+    if digit_one != numbers[9].to_string().parse::<usize>().unwrap() {
         return false;
     }
 
     let digit_second = validate_second_digit(&numbers);
-    if digit_second != numbers[10].to_string().parse::<i16>().unwrap() {
+    if digit_second != numbers[10].to_string().parse::<usize>().unwrap() {
         return false;
     }
 
     return true;
 }
 
-fn validate_first_digit(numbers: &Vec<char>) -> i16 {
+pub fn generate() -> String {
+    let mut rng = rand::thread_rng();
+    const CHARSET: &[u8] = b"0123456789";
+
+    let mut vec: Vec<char> = (0..9)
+        .map(|_| {
+            let idx = rng.gen_range(0, CHARSET.len());
+            CHARSET[idx] as char
+        })
+        .collect();
+
+    vec.push(CHARSET[validate_first_digit(&vec)] as char);
+    vec.push(CHARSET[validate_second_digit(&vec)] as char);
+
+    return vec.into_iter().collect();
+}
+
+fn validate_first_digit(numbers: &Vec<char>) -> usize {
     let mut count = 10;
     let mut _sum = 0;
     for number in numbers {
         if count >= 2 {
-            let number_int = number.to_string().parse::<i16>().unwrap();
+            let number_int = number.to_string().parse::<usize>().unwrap();
             _sum += number_int * count;
             count -= 1;
         }
@@ -40,12 +59,12 @@ fn validate_first_digit(numbers: &Vec<char>) -> i16 {
     }
 }
 
-fn validate_second_digit(numbers: &Vec<char>) -> i16 {
+fn validate_second_digit(numbers: &Vec<char>) -> usize {
     let mut count = 11;
     let mut _sum = 0;
     for number in numbers {
         if count >= 2 {
-            let number_int = number.to_string().parse::<i16>().unwrap();
+            let number_int = number.to_string().parse::<usize>().unwrap();
             _sum += number_int * count;
             count -= 1;
         }

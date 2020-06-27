@@ -14,3 +14,4 @@ repository = "https://github.com/andrelmlins/cpf_cnpj"
 travis-ci = { repository = "andrelmlins/cpf_cnpj" }
 
 [dependencies]
+rand = "0.7"
