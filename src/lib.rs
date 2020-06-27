@@ -40,6 +40,12 @@ cnpj::validate("36.002.518/0001-01");
 
 cnpj::validate("36002518000101");
 // true
+
+cpf::generate();
+// 25524893033
+
+cnpj::generate();
+// 76071265000142
 ```
 */
 
