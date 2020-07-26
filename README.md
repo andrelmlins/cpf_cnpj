@@ -16,7 +16,7 @@ Adicione essa dependência no seu `Cargo.toml`:
 
 ```toml
 [dependencies]
-cpf_cnpj = "0.1.0"
+cpf_cnpj = "0.2"
 ```
 
 ## Uso básico
