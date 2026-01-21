@@ -1,93 +1,118 @@
 use rand::Rng;
 
 pub fn validate(valor: &str) -> bool {
-    let numbers = valor
+    let numbers: Vec<usize> = match valor
         .chars()
-        .filter(|s| !"./-".contains(s.to_owned()))
-        .collect::<Vec<_>>();
+        .filter(|c| !"./-".contains(*c))
+        .map(|c| c.to_digit(10).map(|d| d as usize))
+        .collect::<Option<Vec<_>>>()
+    {
+        Some(nums) => nums,
+        None => return false, // Found non-digit character
+    };
 
     if numbers.len() != 11 || equal_digits(&numbers) {
         return false;
     }
 
     let digit_one = validate_first_digit(&numbers);
-    if digit_one != numbers[9].to_string().parse::<usize>().unwrap() {
+    if digit_one != numbers[9] {
         return false;
     }
 
     let digit_second = validate_second_digit(&numbers);
-    if digit_second != numbers[10].to_string().parse::<usize>().unwrap() {
+    if digit_second != numbers[10] {
         return false;
     }
 
-    return true;
+    true
 }
 
 pub fn generate() -> String {
     let mut rng = rand::thread_rng();
-    const CHARSET: &[u8] = b"0123456789";
 
-    let mut vec: Vec<char> = (0..9)
-        .map(|_| {
-            let idx = rng.gen_range(0, CHARSET.len());
-            CHARSET[idx] as char
-        })
+    let mut vec: Vec<usize> = (0..9)
+        .map(|_| rng.gen_range(0, 10))
         .collect();
 
-    vec.push(CHARSET[validate_first_digit(&vec)] as char);
-    vec.push(CHARSET[validate_second_digit(&vec)] as char);
+    vec.push(validate_first_digit(&vec));
+    vec.push(validate_second_digit(&vec));
 
-    return vec.into_iter().collect();
+    vec.into_iter()
+        .map(|d| char::from_digit(d as u32, 10).unwrap())
+        .collect()
 }
 
-fn validate_first_digit(numbers: &Vec<char>) -> usize {
-    let mut count = 10;
-    let mut _sum = 0;
-    for number in numbers {
-        if count >= 2 {
-            let number_int = number.to_string().parse::<usize>().unwrap();
-            _sum += number_int * count;
-            count -= 1;
-        }
-    }
-    let result = (_sum * 10) % 11;
+fn validate_first_digit(numbers: &[usize]) -> usize {
+    let sum: usize = numbers
+        .iter()
+        .take(9)
+        .enumerate()
+        .map(|(i, n)| n * (10 - i))
+        .sum();
 
-    if result == 10 {
-        return 0;
-    } else {
-        return result;
-    }
+    let result = (sum * 10) % 11;
+    if result == 10 { 0 } else { result }
 }
 
-fn validate_second_digit(numbers: &Vec<char>) -> usize {
-    let mut count = 11;
-    let mut _sum = 0;
-    for number in numbers {
-        if count >= 2 {
-            let number_int = number.to_string().parse::<usize>().unwrap();
-            _sum += number_int * count;
-            count -= 1;
-        }
-    }
-    let result = (_sum * 10) % 11;
+fn validate_second_digit(numbers: &[usize]) -> usize {
+    let sum: usize = numbers
+        .iter()
+        .take(10)
+        .enumerate()
+        .map(|(i, n)| n * (11 - i))
+        .sum();
 
-    if result == 10 {
-        return 0;
-    } else {
-        return result;
-    }
+    let result = (sum * 10) % 11;
+    if result == 10 { 0 } else { result }
 }
 
-fn equal_digits(numbers: &Vec<char>) -> bool {
-    let mut digit = String::from("");
+fn equal_digits(numbers: &[usize]) -> bool {
+    numbers.windows(2).all(|w| w[0] == w[1])
+}
 
-    for number in numbers {
-        if digit == "" {
-            digit = number.to_string();
-        } else if digit != number.to_string() {
-            return false;
-        }
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn should_validate_valid_cpf() {
+        assert!(validate("40743854063"));
     }
 
-    return true;
+    #[test]
+    fn should_validate_valid_cpf_with_formatting() {
+        assert!(validate("407.438.540-63"));
+    }
+
+    #[test]
+    fn should_reject_invalid_cpf() {
+        assert!(!validate("40743854013"));
+    }
+
+    #[test]
+    fn should_reject_cpf_with_all_same_digits() {
+        assert!(!validate("11111111111"));
+    }
+
+    #[test]
+    fn should_reject_masked_cpf_without_panic() {
+        assert!(!validate("***.104.227-**"));
+    }
+
+    #[test]
+    fn should_reject_cpf_with_letters() {
+        assert!(!validate("407438540AB"));
+    }
+
+    #[test]
+    fn should_reject_cpf_with_special_characters() {
+        assert!(!validate("40743854@63"));
+    }
+
+    #[test]
+    fn should_generate_valid_cpf() {
+        let cpf = generate();
+        assert!(validate(&cpf));
+    }
 }

@@ -1,90 +1,123 @@
 use rand::Rng;
 
 pub fn validate(valor: &str) -> bool {
-    let numbers = valor
+    let numbers: Vec<usize> = match valor
         .chars()
-        .filter(|s| !"./-".contains(s.to_owned()))
-        .collect::<Vec<_>>();
+        .filter(|c| !"./-".contains(*c))
+        .map(|c| c.to_digit(10).map(|d| d as usize))
+        .collect::<Option<Vec<_>>>()
+    {
+        Some(nums) => nums,
+        None => return false, // Found non-digit character
+    };
 
     if numbers.len() != 14 || equal_digits(&numbers) {
         return false;
     }
 
     let digit_one = validate_first_digit(&numbers);
-    if digit_one != numbers[12].to_string().parse::<usize>().unwrap() {
+    if digit_one != numbers[12] {
         return false;
     }
 
     let digit_second = validate_second_digit(&numbers);
-    if digit_second != numbers[13].to_string().parse::<usize>().unwrap() {
+    if digit_second != numbers[13] {
         return false;
     }
 
-    return true;
+    true
 }
 
 pub fn generate() -> String {
     let mut rng = rand::thread_rng();
-    const CHARSET: &[u8] = b"0123456789";
 
-    let mut vec: Vec<char> = (0..8)
-        .map(|_| {
-            let idx = rng.gen_range(0, CHARSET.len());
-            CHARSET[idx] as char
-        })
+    let mut vec: Vec<usize> = (0..8)
+        .map(|_| rng.gen_range(0, 10))
         .collect();
 
-    vec.extend(vec!['0', '0', '0', '1']);
-    vec.push(CHARSET[validate_first_digit(&vec)] as char);
-    vec.push(CHARSET[validate_second_digit(&vec)] as char);
+    vec.extend(vec![0, 0, 0, 1]);
+    vec.push(validate_first_digit(&vec));
+    vec.push(validate_second_digit(&vec));
 
-    return vec.into_iter().collect();
+    vec.into_iter()
+        .map(|d| char::from_digit(d as u32, 10).unwrap())
+        .collect()
 }
 
-fn validate_first_digit(numbers: &Vec<char>) -> usize {
-    let array: [usize; 12] = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-    let mut _sum = 0;
-    for (position, number) in numbers.iter().enumerate() {
-        if position <= 11 {
-            let number_int = number.to_string().parse::<usize>().unwrap();
-            _sum += number_int * array[position];
-        }
-    }
-    let result = _sum % 11;
+fn validate_first_digit(numbers: &[usize]) -> usize {
+    const WEIGHTS: [usize; 12] = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 
-    if result < 2 {
-        return 0;
-    }
-    return 11 - result;
+    let sum: usize = numbers
+        .iter()
+        .take(12)
+        .zip(WEIGHTS.iter())
+        .map(|(n, w)| n * w)
+        .sum();
+
+    let result = sum % 11;
+    if result < 2 { 0 } else { 11 - result }
 }
 
-fn validate_second_digit(numbers: &Vec<char>) -> usize {
-    let array: [usize; 13] = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-    let mut _sum = 0;
-    for (position, number) in numbers.iter().enumerate() {
-        if position <= 12 {
-            let number_int = number.to_string().parse::<usize>().unwrap();
-            _sum += number_int * array[position];
-        }
-    }
-    let result = _sum % 11;
+fn validate_second_digit(numbers: &[usize]) -> usize {
+    const WEIGHTS: [usize; 13] = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 
-    if result < 2 {
-        return 0;
-    }
-    return 11 - result;
+    let sum: usize = numbers
+        .iter()
+        .take(13)
+        .zip(WEIGHTS.iter())
+        .map(|(n, w)| n * w)
+        .sum();
+
+    let result = sum % 11;
+    if result < 2 { 0 } else { 11 - result }
 }
 
-fn equal_digits(numbers: &Vec<char>) -> bool {
-    let mut digit = String::from("");
+fn equal_digits(numbers: &[usize]) -> bool {
+    numbers.windows(2).all(|w| w[0] == w[1])
+}
 
-    for number in numbers {
-        if digit == "" {
-            digit = number.to_string();
-        } else if digit != number.to_string() {
-            return false;
-        }
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn should_validate_valid_cnpj() {
+        assert!(validate("11222333000181"));
     }
 
-    return true;
+    #[test]
+    fn should_validate_valid_cnpj_with_formatting() {
+        assert!(validate("11.222.333/0001-81"));
+    }
+
+    #[test]
+    fn should_reject_invalid_cnpj() {
+        assert!(!validate("11222333000182"));
+    }
+
+    #[test]
+    fn should_reject_cnpj_with_all_same_digits() {
+        assert!(!validate("11111111111111"));
+    }
+
+    #[test]
+    fn should_reject_masked_cnpj_without_panic() {
+        assert!(!validate("**.222.333/0001-**"));
+    }
+
+    #[test]
+    fn should_reject_cnpj_with_letters() {
+        assert!(!validate("11222333000AB1"));
+    }
+
+    #[test]
+    fn should_reject_cnpj_with_special_characters() {
+        assert!(!validate("11222333@00181"));
+    }
+
+    #[test]
+    fn should_generate_valid_cnpj() {
+        let cnpj = generate();
+        assert!(validate(&cnpj));
+    }
 }
