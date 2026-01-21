@@ -1,6 +1,6 @@
 [package]
 name = "cpf_cnpj"
-version = "0.2.1"
+version = "0.3.0"
 authors = ["André Lins <andrelucas01@hotmail.com>"]
 edition = "2018"
 license = "MIT"
@@ -14,4 +14,4 @@ repository = "https://github.com/andrelmlins/cpf_cnpj"
 travis-ci = { repository = "andrelmlins/cpf_cnpj" }
 
 [dependencies]
-rand = "0.7"
+rand = "0.9.2"

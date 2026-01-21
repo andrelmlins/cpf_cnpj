@@ -6,6 +6,7 @@ Alguns características importantes devem ser destacadas nessa biblioteca:
 - Analisa repetições de dígitos como `111.111.111-11` ou `000.000.000-00`.
 - Ignora caracteres especiais.
 - Valida antecipadamente a quantidade de dígitos numéricos
+- **Suporte ao CNPJ Alfanumérico** (novo formato a partir de julho/2026 - IN RFB nº 2.229/2024)
 
 ## Instalação
 
@@ -13,7 +14,7 @@ Adicione essa dependência no seu `Cargo.toml`:
 
 ```toml
 [dependencies]
-cpf_cnpj = "0.2"
+cpf_cnpj = "0.3"
 ```
 
 ## Uso básico
@@ -41,11 +42,19 @@ cnpj::validate("36.002.518/0001-01");
 cnpj::validate("36002518000101");
 // true
 
+// CNPJ alfanumérico (novo formato 2026)
+cnpj::validate("12.ABC.345/01DE-35");
+// true
+
 cpf::generate();
 // 25524893033
 
 cnpj::generate();
 // 76071265000142
+
+// Gera CNPJ no novo formato alfanumérico
+cnpj::generate_alphanumeric();
+// A1B2C3D4E5F600
 ```
 */
 

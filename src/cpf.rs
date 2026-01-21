@@ -1,5 +1,10 @@
 use rand::Rng;
 
+/// Converte um dígito (0-9) para seu caractere correspondente.
+fn digit_to_char(d: usize) -> char {
+    (b'0' + d as u8) as char
+}
+
 pub fn validate(valor: &str) -> bool {
     let numbers: Vec<usize> = match valor
         .chars()
@@ -29,18 +34,14 @@ pub fn validate(valor: &str) -> bool {
 }
 
 pub fn generate() -> String {
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
 
-    let mut vec: Vec<usize> = (0..9)
-        .map(|_| rng.gen_range(0, 10))
-        .collect();
+    let mut vec: Vec<usize> = (0..9).map(|_| rng.random_range(0..10)).collect();
 
     vec.push(validate_first_digit(&vec));
     vec.push(validate_second_digit(&vec));
 
-    vec.into_iter()
-        .map(|d| char::from_digit(d as u32, 10).unwrap())
-        .collect()
+    vec.into_iter().map(digit_to_char).collect()
 }
 
 fn validate_first_digit(numbers: &[usize]) -> usize {
@@ -52,7 +53,11 @@ fn validate_first_digit(numbers: &[usize]) -> usize {
         .sum();
 
     let result = (sum * 10) % 11;
-    if result == 10 { 0 } else { result }
+    if result == 10 {
+        0
+    } else {
+        result
+    }
 }
 
 fn validate_second_digit(numbers: &[usize]) -> usize {
@@ -64,7 +69,11 @@ fn validate_second_digit(numbers: &[usize]) -> usize {
         .sum();
 
     let result = (sum * 10) % 11;
-    if result == 10 { 0 } else { result }
+    if result == 10 {
+        0
+    } else {
+        result
+    }
 }
 
 fn equal_digits(numbers: &[usize]) -> bool {
